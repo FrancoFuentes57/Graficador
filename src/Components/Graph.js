@@ -1,7 +1,6 @@
 import React,{useState} from 'react';
 import { Layout, Row, Col, Form , Radio,Button, Input, Space,Select, Image} from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
-import axios from 'axios'
 import 'antd/dist/antd.css'
 import './Graph.css'
 
@@ -14,17 +13,14 @@ function Graph() {
   const [data, setData] = useState(null)
 
   const handleSubmit = async (data) =>{
-
-    // console.log(data)
-
-    try {
+        try {
       
       const response = await fetch('/api/data', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({data})
       })
   
       if (response.ok) {
@@ -38,9 +34,7 @@ function Graph() {
     } catch (error) {
       console.log(error)
     }
-
-    
-  }
+}
 
   return (
     <Layout className="fondo">
