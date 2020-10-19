@@ -1,35 +1,44 @@
-import React,{useEffect} from 'react';
-import { Layout, Row, Col, Form , Radio,Button, Input, Space,Select} from "antd";
+import React,{useState} from 'react';
+import { Layout, Row, Col, Form , Radio,Button, Input, Space,Select, Image} from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import axios from 'axios'
 import 'antd/dist/antd.css'
 import './Graph.css'
 
-function Graph() {
-
-  useEffect(() => {
-    fetch('/api').then(response=>{
-      if(response.ok){
-        return response.json()
-      }
-    }).then(data => console.log(data))
-  },[])
-
-  
+function Graph() {  
 
   const {Content} = Layout;
 
   const { Option } = Select;
 
-  const handleSubmit = (data) =>{
+  const [data, setData] = useState(null)
 
-    console.log(data)
+  const handleSubmit = async (data) =>{
 
-        axios.post('/api/data',{
-            data
-        }).then(res => {
-            console.log(res.data)
-        })
+    // console.log(data)
+
+    try {
+      
+      const response = await fetch('/api/data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+  
+      if (response.ok) {
+        const image = await response.blob()
+        // setData(new File([image], "result"))
+        setData(URL.createObjectURL(image))
+      } else {
+        const error = await response.text()
+        console.log(error)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+
     
   }
 
@@ -235,8 +244,19 @@ function Graph() {
                 <Row className="margen__item">
                     <Button className="submit" htmlType="submit">Calcular</Button>
                 </Row>
-
             </Form>
+
+{
+  data ? (
+
+            <Row className="seccion">
+                <Col xs={24}>
+                    <Image src={data}></Image>
+                </Col>
+            </Row>
+
+  ) : null
+}
         </Content>
         </div>
     </Layout>
