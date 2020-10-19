@@ -1,8 +1,7 @@
-from flask import Flask,jsonify,request,json,url_for,send_file
+from flask import Flask,request,json,send_file
 import pulp 
 import numpy as np
 import matplotlib.pyplot as plt
-from io import BytesIO
 
 dir(pulp)
 
@@ -14,7 +13,8 @@ def index():
         'name':'Hello World'
     }
 
-
+@app.route('/',methods=['POST'])
+@app.route('/data',methods=['POST'])
 @app.route('/api/data',methods=['POST'])
 def create():
     # request_data = json.loads(request.data)
@@ -144,4 +144,4 @@ def create():
     
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    app.run(host='0.0.0.0', debug=True) 
